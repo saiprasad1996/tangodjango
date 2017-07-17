@@ -19,4 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^lazyrest/',include('lazyrest.urls')),
+    url(r'^',include('lazyrest.urls')),
 ]
