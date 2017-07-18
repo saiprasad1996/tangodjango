@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^lazyrest/',include('lazyrest.urls')),
     url(r'^hello/',include('lazyrest.urls')),
     url(r'^',include('lazyrest.urls')),
+    url(r'^',include('please.urls')),
 ]
