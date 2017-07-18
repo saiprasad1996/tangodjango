@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     'lazyrest.apps.LazyrestConfig',
     'please.apps.PleaseConfig',
+    'testdoc.apps.TestdocConfig',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
