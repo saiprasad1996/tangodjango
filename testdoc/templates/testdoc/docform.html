@@ -1,0 +1,21 @@
+{% load staticfiles %}
+<html>
+    <head><title>Test Doc form</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/testdoc.css' %} " >
+</head>
+    <body>
+    <h1>Testers</h1>
+    <ul>
+        {% for company in companies %}
+        <div>
+            <h1>{{ company }}</h1>
+            <p>{{ company.description }}</p>
+        </div>
+        {% endfor %} 
+    </ul>
+
+</body>
+
+</html>
