@@ -26,3 +26,17 @@ def pleaseInfo(request):
             return response
         except KeyError :
             return HttpResponse("UnAuthorized access detected",status = 403)
+    elif request.method == 'PUT':
+        body = request.body.decode('utf-8')
+        auth = request.META['HTTP_AUTH']
+        response = json.dumps({"request_type":'PUT','body':body,'header_auth':auth})
+        return HttpResponse(response)
+    elif request.method == 'PATCH':
+        body = request.body.decode('utf-8')
+        response = json.dumps({"request_type":'PATCH','body':body})
+        return HttpResponse(response)
+    elif request.method == 'DELETE':
+        body = request.body.decode('utf-8')
+        response = json.dumps({"request_type":'DELETE','body':body})
+        return HttpResponse(response)
+
