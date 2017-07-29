@@ -39,4 +39,6 @@ def pleaseInfo(request):
         body = request.body.decode('utf-8')
         response = json.dumps({"request_type":'DELETE','body':body})
         return HttpResponse(response)
+    else:
+        return HttpResponse(json.dumps({"request_type":request.method,'body':request.body.decode('utf-8')}))
 
