@@ -102,7 +102,7 @@ def postquestion(request):
                     }
                 ]
             }
-            return json_response(json.dumps(response))
+            return json_response(response)
         except Exception:
             return json_response({
             "response_type": "ephemeral",

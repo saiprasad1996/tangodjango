@@ -102,5 +102,6 @@ ENV/
 
 .vscode/
 please/migrations/*.py
-
+lazyrest/migrations/*.py
+testdoc/migrations/*.py
 db.sqlite3
