@@ -61,7 +61,7 @@ def postquestion(request):
         return HttpResponse("Your questions down here")
     elif request.method =="POST":
         try : 
-            log = Log(logtext=str(request))
+            log = Log(logtext=str(request.POST))
             log.save(force_insert=True)
             token=request.POST["token"]
             team_id=request.POST["team_id"]
