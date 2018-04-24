@@ -5,7 +5,7 @@ from . import views
 urlpatterns =[
     url(r'^$',views.pleaseInfo),
     url(r'^askus$',views.postquestion),
-    url(r'^questions$',view.showQuestions),
+    url(r'^questions$',views.showQuestions),
 
 
 ]
