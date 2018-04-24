@@ -18,7 +18,11 @@ class SlackAskUs(models.Model):
     trigger_id=models.TextField(default='')
 
     def __str__(self):
-        return str(token)
+        return str(self.token)
 
 class Log(models.Model):
     logtext = models.TextField(default="")
+    timestamp = models.TimeField()
+
+    def __str__():
+        return str(self.timestamp)

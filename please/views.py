@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import SlackAskUs,Log
+import datetime
 # Create your views here.
 
 def json_response(obj):
@@ -61,13 +62,18 @@ def postquestion(request):
         return HttpResponse("Your questions down here")
     elif request.method =="POST":
         try : 
-            log = Log(logtext=str(request.POST))
+            log = Log(logtext=str(request.POST),timestamp=datetime.datetime.now())
             log.save(force_insert=True)
+
+            ##################
+
+            # <QueryDict: {'token': ['sUoeDIGYKcWoVHC11tBnOx2Z'], 'team_id': ['TA2SX1M2B'], 'team_domain': ['techguidesczm'], 'channel_id': ['GAA12L3Q9'], 'channel_name': ['privategroup'], 'user_id': ['UAAD7BAA2'], 'user_name': ['friendship.sai1996'], 'command': ['/askus'], 'text': ['Ask me'], 'response_url': ['https://hooks.slack.com/commands/TA2SX1M2B/352279176883/nFzHrX81iWbl2C82HadxN4Yv'], 'trigger_id': ['351683324272.342915055079.3f3d64387f2c4b3e8a6310a704c404a9']}>
+            #################
             token=request.POST["token"]
             team_id=request.POST["team_id"]
             team_domain=request.POST["team_domain"]
-            enterprise_id=request.POST["enterprise_id"]
-            enterprise_name=request.POST["enterprise_name"]
+            # enterprise_id=request.POST["enterprise_id"]
+            # enterprise_name=request.POST["enterprise_name"]
             channel_id=request.POST["channel_id"]
             channel_name=request.POST["channel_name"]
             user_id=request.POST["user_id"]
@@ -79,8 +85,6 @@ def postquestion(request):
             new_data = SlackAskUs(token=token,
                                     team_id=team_id,
                                     team_domain=team_domain,
-                                    enterprise_id=enterprise_id,
-                                    enterprise_name=enterprise_name,
                                     channel_id=channel_id,
                                     channel_name=channel_name,
                                     user_id=user_id,
