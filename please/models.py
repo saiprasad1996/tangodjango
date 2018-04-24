@@ -24,5 +24,5 @@ class Log(models.Model):
     logtext = models.TextField(default="")
     timestamp = models.TimeField()
 
-    def __str__():
+    def __str__(self):
         return str(self.timestamp)
