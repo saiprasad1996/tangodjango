@@ -12,7 +12,20 @@
         <div>
             <h1>{{ q.user_name }}</h1>
             <p>{{ q.text }}</p>
-            <p>{{q.channel_name}}</p>
+            <p>Channel : {{q.channel_name}} <br>
+                token :  {{q.token}} <br>
+                team_id : {{q.team_id}} <br>
+                team_domain : {{q.team_domain}} <br>
+                
+                channel_id : {{q.channel_id}} <br>
+                channel_name : {{q.channel_name}} <br>
+                user_id : {{q.user_id}} <br>
+                user_name : {{q.user_name}} <br>
+                command : {{q.command}} <br>
+                response_url : {{q.response_url}} <br>
+                trigger_id : {{q.trigger_id}} <br>
+            </p>
+
         </div>
         <hr>
         {% endfor %} 
