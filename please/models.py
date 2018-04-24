@@ -18,7 +18,7 @@ class SlackAskUs(models.Model):
     trigger_id=models.TextField(default='')
 
     def __str__(self):
-        return 
+        return str(token)
 
-    def __unicode__(self):
-        return 
+class Log(models.Model):
+    logtext = models.TextField(default="")

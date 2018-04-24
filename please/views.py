@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import SlackAskUs
+from .models import SlackAskUs,Log
 # Create your views here.
 
 def json_response(obj):
@@ -61,6 +61,7 @@ def postquestion(request):
         return HttpResponse("Your questions down here")
     elif request.method =="POST":
         try : 
+            log = Log(logtext=str(request))
             token=request.POST["token"]
             team_id=request.POST["team_id"]
             team_domain=request.POST["team_domain"]
