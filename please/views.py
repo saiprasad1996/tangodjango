@@ -108,3 +108,10 @@ def postquestion(request):
             "response_type": "ephemeral",
             "text": "Oops! I think there is some issue with this command. Please check back later"
             })
+
+def showQuestions(request):
+    try:
+        questions = SlackAskUs.objects.all()
+        return render(request,'please/questions.html',{'questions':questions})
+    except Exception:
+        return json_response({"message":"Something went wrong"})

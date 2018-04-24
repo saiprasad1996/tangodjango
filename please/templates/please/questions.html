@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<html>
+    <head><title>Test Doc form</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+</head>
+    <body>
+    <h1>Testers</h1>
+    <ul>
+        {% for q in questions %}
+        <div>
+            <h1>{{ q.user_name }}</h1>
+            <p>{{ q.text }}</p>
+            <p>{{q.channel_name}}</p>
+        </div>
+        <hr>
+        {% endfor %} 
+    </ul>
+
+</body>
+
+</html>
