@@ -97,7 +97,7 @@ def postquestion(request):
                                     trigger_id=trigger_id)
             new_data.save()
             r = requests.post('https://hooks.slack.com/services/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', json = {
-                "text": "Question from {} Workspace".format(team_domain),"attachments": [{"title": str(text),           
+                "text": "Question from {} Workspace".format("Techguides" if team_domain=="techguidesczm" else team_domain),"attachments": [{"title": str(text),           
                 "author_name": "Asked by {}".format(user_name)
 			},{
             "title": "See Question on Collaborizm here : ",
