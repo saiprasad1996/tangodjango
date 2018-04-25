@@ -97,9 +97,12 @@ def postquestion(request):
                                     trigger_id=trigger_id)
             new_data.save()
             r = requests.post('https://hooks.slack.com/services/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', json = {
-                "text": "Question from {}".format(channel_name),"attachments": [{"title": str(text),           
-                "author_name": "by {}".format(user_name)
-			}]
+                "text": "Question from {} Workspace".format(team_domain),"attachments": [{"title": str(text),           
+                "author_name": "Asked by {}".format(user_name)
+			},{
+            "title": "See Question on Collaborizm here : ",
+            "text": "https://www.collaborizm.com/thread/Hyq6_lp2M"
+        }]
 },headers={"Content-Type":"application/json"})
             response = {
                 "text": "Ok! Thats a great question.. We'll get back to you soon! And yeah we have posted to the random group :-p ",
