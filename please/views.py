@@ -5,6 +5,7 @@ import json
 from .models import SlackAskUs,Log
 import datetime
 import requests
+from tangodjango import settings
 # Create your views here.
 
 def json_response(obj):
@@ -125,3 +126,26 @@ def showQuestions(request):
         return render(request,'please/questions.html',{'questions':questions})
     except Exception:
         return json_response({"message":"Something went wrong"})
+      
+      
+def auth(request):
+  return render(request,'please/slack_add.html')
+
+def collab_redirect(request):
+  try:
+    payload = {"client_id":settings.CREDS['client_id'],"client_secret":settings.CREDS['client_secret'],"redirect_uri":"https://tangodjango.herokuapp.com/please/collab/auth/redirect"}
+    r = requests.get('https://slack.com/api/oauth.access?code='+request.GET["code"],params=payload)
+    log = Log(logtext=str(r.text),timestamp=datetime.datetime.now())
+    log.save(force_insert=True)
+    return HttpResponse("Success!")
+  except Exception:
+    
+    return HttpResponse("Error encountered")
+      
+      
+      
+      
+      
+      
+      
+      
