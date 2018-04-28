@@ -126,7 +126,7 @@ USE_TZ = True
 
 #App Cred
 
-CREDS = {"client_id":'342915055079.354953735763',"client_secret"'b745dadb21742140713d400a85fb1917'}
+CREDS = {"client_id":'342915055079.354953735763',"client_secret":'b745dadb21742140713d400a85fb1917'}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
