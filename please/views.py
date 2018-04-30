@@ -193,7 +193,8 @@ def collab_broadcast(request):
     response = {"text": "Broadcasting done!"}
     
     return json_response(response)
-    
-      
-      
-      
+  except Exception:
+    return json_response({
+            "response_type": "ephemeral",
+            "text": "Oops! I think there is some issue with this command. Please check back later"
+            })
