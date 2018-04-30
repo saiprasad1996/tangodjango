@@ -26,3 +26,19 @@ class Log(models.Model):
 
     def __str__(self):
         return str(self.timestamp)
+      
+class AuthenticatedSpaces(models.Model):
+  access_token = models.TextField(required=True)
+  scope= models.TextField(required=True)
+  user_id= models.TextField(required=True)
+  team_name= models.TextField(required=True)
+  team_id= models.TextField(required=True,primary_key=True)
+  incoming_webhook_channel= models.TextField(required=True)
+  incoming_webhook_channel_id= models.TextField(required=True)
+  incoming_webhook_configuration_url= models.TextField(required=True)
+  incoming_webhook_url= models.TextField(required=True)
+  bot_user_id= models.TextField(required=True)
+  bot_access_token= models.TextField(required=True)
+  
+    def __str__(self):
+      return str(self.team_name)

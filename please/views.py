@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render,redirect
 import json
-from .models import SlackAskUs,Log
+from .models import SlackAskUs,Log,AuthenticatedSpaces
 import datetime
 import requests
 from tangodjango import settings
@@ -135,17 +135,63 @@ def collab_redirect(request):
   try:
     payload = {"client_id":settings.CREDS['client_id'],"client_secret":settings.CREDS['client_secret'],"redirect_uri":"https://tangodjango.herokuapp.com/please/collab/auth/redirect"}
     r = requests.get('https://slack.com/api/oauth.access?code='+request.GET["code"],params=payload)
+    json_r = json.loads(r.text)
+    space = AuthenticatedSpaces(access_token = json_r["access_token"],
+                        scope= json_r["scope"],
+                        user_id= json_r["user_id"],
+                        team_name= json_r["team_name"],
+                        team_id= json_r["team_id"],
+                        incoming_webhook_channel= json_r["incoming_webhook"]["channel"],
+                        incoming_webhook_channel_id=json_r["incoming_webhook"]["channel_id"],
+                        incoming_webhook_configuration_url= json_r["incoming_webhook"]["configuration_url"],
+                        incoming_webhook_url= json_r["incoming_webhook"]["url"],
+                        bot_user_id= json_r["bot"]["bot_user_id"]",
+                        bot_access_token= json_r["bot"]["bot_access_token"])
+    space.save()
     log = Log(logtext=str(r.text),timestamp=datetime.datetime.now())
     log.save(force_insert=True)
+    
     return HttpResponse("Success!")
   except Exception:
     
     return HttpResponse("Error encountered")
       
       
+def collab_broadcast(request):
+  try:
+    space = AuthenticatedSpaces.objects.all()
+    token=request.POST["token"]
+    team_id=request.POST["team_id"]
+    team_domain=request.POST["team_domain"]
+    # enterprise_id=request.POST["enterprise_id"]
+    # enterprise_name=request.POST["enterprise_name"]
+    channel_id=request.POST["channel_id"]
+    channel_name=request.POST["channel_name"]
+    user_id=request.POST["user_id"]
+    user_name=request.POST["user_name"]
+    command=request.POST["command"]
+    text=request.POST["text"]
+    response_url=request.POST["response_url"]
+    trigger_id=request.POST["trigger_id"]
+    new_data = SlackAskUs(token=token,
+                            team_id=team_id,
+                            team_domain=team_domain,
+                            channel_id=channel_id,
+                            channel_name=channel_name,
+                            user_id=user_id,
+                            user_name=user_name,
+                            command=command,
+                            text=text,
+                            response_url=response_url,
+                            trigger_id=trigger_id)
+    new_data.save()
+    for s in space:
+      r = requests.post(url=s.incoming_webhook_url,json={{"text": "New message from Collaborizm"},attachments:[{"text": text}]})
       
-      
-      
+    response = {"text": "Broadcasting done!"}
+    
+    return json_response(response)
+    
       
       
       

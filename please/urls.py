@@ -8,6 +8,7 @@ urlpatterns =[
     url(r'^questions$',views.showQuestions),
     url(r'^collab/auth$',views.auth),
     url(r'^collab/auth/redirect$',views.collab_redirect),
+    url(r'^collab/broadcast$',views.collab_broadcast),
 
 
 ]
