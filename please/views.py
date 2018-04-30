@@ -145,7 +145,7 @@ def collab_redirect(request):
                         incoming_webhook_channel_id=json_r["incoming_webhook"]["channel_id"],
                         incoming_webhook_configuration_url= json_r["incoming_webhook"]["configuration_url"],
                         incoming_webhook_url= json_r["incoming_webhook"]["url"],
-                        bot_user_id= json_r["bot"]["bot_user_id"]",
+                        bot_user_id= json_r["bot"]["bot_user_id"],
                         bot_access_token= json_r["bot"]["bot_access_token"])
     space.save()
     log = Log(logtext=str(r.text),timestamp=datetime.datetime.now())
