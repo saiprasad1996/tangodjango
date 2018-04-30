@@ -39,6 +39,6 @@ class AuthenticatedSpaces(models.Model):
   incoming_webhook_url= models.TextField(required=True)
   bot_user_id= models.TextField(required=True)
   bot_access_token= models.TextField(required=True)
-  
-    def __str__(self):
-      return str(self.team_name)
+
+  def __str__(self):
+    return str(self.team_name)
