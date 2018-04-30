@@ -186,7 +186,7 @@ def collab_broadcast(request):
                             trigger_id=trigger_id)
     new_data.save()
     for s in space:
-      r = requests.post(url=s.incoming_webhook_url,json={{"text": "New message from Collaborizm"},attachments:[{"text": text}]})
+      r = requests.post(url=s.incoming_webhook_url,json={{"text": "New message from Collaborizm"},'attachments':[{"text": text}]})
       
     response = {"text": "Broadcasting done!"}
     
