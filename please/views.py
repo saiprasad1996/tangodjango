@@ -156,7 +156,7 @@ def collab_redirect(request):
     
     return HttpResponse("Error encountered")
       
-      
+@csrf_exempt
 def collab_broadcast(request):
   try:
     space = AuthenticatedSpaces.objects.all()
