@@ -106,12 +106,45 @@ def postquestion(request):
         }]
 },headers={"Content-Type":"application/json"})
             response = {
-                "text": "Ok! Thats a great question.. We'll get back to you soon! And yeah we have posted to the random group :-p ",
+                "text": "Ok! Thats a great question.. One of your community member will get back to you soon! ",
                 "attachments": [
-                    {
-                        "text":"Thinking.. Thinking..."
+        {
+            "text": "To access the collaborizm community we need to authenticate your facebook as a security check…",
+            "fallback": "You are unable to choose a game",
+            "callback_id": "login_option",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "sign_in",
+                    "text": "Sign In",
+                    "type": "button",
+                    "value": "signin",
+					"url": "https://www.facebook.com/v3.0/dialog/oauth?client_id=368928313620535&redirect_uri=https://tangodjango.herokuapp.com/please/auth&state={request=login,user_id=}"
+                },
+				{
+                    "name": "sign_in",
+                    "text": "Sign Up",
+                    "type": "button",
+                    "value": "signup",
+                    "url":"https://www.collaborizm.com/login"
+                },
+                {
+                    "name": "sign_in",
+                    "text": "Nope Thanks",
+                    "style": "danger",
+                    "type": "button",
+                    "value": "nope",
+                    "confirm": {
+                        "title": "Are you sure?",
+                        "text": "Signing Into collaborizm would post the question to the community from right here",
+                        "ok_text": "Yes",
+                        "dismiss_text": "No"
                     }
-                ]
+                }
+            ]
+        }
+    ]
             }
             return json_response(response)
         except Exception:
