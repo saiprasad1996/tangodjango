@@ -120,7 +120,7 @@ def postquestion(request):
                     "text": "Sign In",
                     "type": "button",
                     "value": "signin",
-					"url": "https://www.facebook.com/v3.0/dialog/oauth?client_id=368928313620535&redirect_uri=https://tangodjango.herokuapp.com/please/auth&state={request=login,user_id=}"
+					"url": "https://tangodjango.herokuapp.com/please/collab/fbauth"
                 },
 				{
                     "name": "sign_in",
@@ -236,9 +236,12 @@ def collab_broadcast(request):
 def fbauth(request):
   try:
     if request.method=="GET":
-
+      log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
+            log.save(force_insert=True)
       return render(request,'please/fbauth.html')
     elif request.method=="POST":
+      log = Log(logtext=str(request.POST),timestamp=datetime.datetime.now())
+            log.save(force_insert=True)
       return render(request,'please/fbauth.html')
   except :
     return json_response({"error":"Oops!! Someone crashed on this page while flying"})
