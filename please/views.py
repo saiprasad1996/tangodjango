@@ -237,11 +237,11 @@ def fbauth(request):
   try:
     if request.method=="GET":
       log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
-            log.save(force_insert=True)
+      log.save(force_insert=True)
       return render(request,'please/fbauth.html')
     elif request.method=="POST":
       log = Log(logtext=str(request.POST),timestamp=datetime.datetime.now())
-            log.save(force_insert=True)
+      log.save(force_insert=True)
       return render(request,'please/fbauth.html')
   except :
     return json_response({"error":"Oops!! Someone crashed on this page while flying"})
