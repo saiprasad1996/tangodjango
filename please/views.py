@@ -231,3 +231,17 @@ def collab_broadcast(request):
             "response_type": "ephemeral",
             "text": "Oops! I think there is some issue with this command. Please check back later"
             })
+  
+@csrf_exempt
+def fbauth(request):
+  try:
+    if request.method=="GET":
+
+      return render(request,'please/fbauth.html')
+    elif request.method=="POST":
+      return render(request,'please/fbauth.html')
+  except :
+    return json_response({"error":"Oops!! Someone crashed on this page while flying"})
+    
+  
+  
