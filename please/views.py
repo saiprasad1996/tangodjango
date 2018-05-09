@@ -245,43 +245,43 @@ def collab_broadcast(request):
 
 @csrf_exempt
 def fbauth(request):
-    try:
-        if request.method == "GET":
-            #       log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
-            #       log.save(force_insert=True)
-            return json_response({"error": "Oops!! Someone crashed on this page while wandering"})
-        elif request.method == "POST":
-            log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
-            log.save(force_insert=True)
-            token = request.POST['token']
-            team_id = request.POST['team_id']
-            team_domain = request.POST["team_domain"]
-            channel_id = request.POST['channel_id']
-            user_id = request.POST['user_id']
-            user_name = request.POST['user_name']
-            state_params = token
-            user_id = request.POST['user_id']
+    # try:
+    if request.method == "GET":
+        #       log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
+        #       log.save(force_insert=True)
+        return json_response({"error": "Oops!! Someone crashed on this page while wandering"})
+    elif request.method == "POST":
+        log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
+        log.save(force_insert=True)
+        token = request.POST['token']
+        team_id = request.POST['team_id']
+        team_domain = request.POST["team_domain"]
+        channel_id = request.POST['channel_id']
+        user_id = request.POST['user_id']
+        user_name = request.POST['user_name']
+        state_params = token
+        user_id = request.POST['user_id']
 
-            user = User.objects.filter(user_id=user_id, user_name=user_name, state_params="created")
-            if len(user) == 1:
-                # User exists.. no need to save
-                # api call to post question to collaborizm
-                pass
-            else:
-                user_new = User(user_name_slack=user_name,
-                                slack_token=token,
-                                access_token_fb='',
-                                team_domain=team_domain,
-                                team_id=team_id,
-                                channel_id=channel_id,
-                                user_name_czm='',
-                                state_params=state_params)
-                user_new.save(force_insert=True)
-                return render(request, 'please/fbauth.html',
-                              {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
-                               'team_domain': team_domain})
-    except:
-        return json_response({"error": "Oops!! Someone crashed on this page while flying"})
+        user = User.objects.filter(user_id=user_id, user_name=user_name, state_params="created")
+        if len(user) == 1:
+            # User exists.. no need to save
+            # api call to post question to collaborizm
+            pass
+        else:
+            user_new = User(user_name_slack=user_name,
+                            slack_token=token,
+                            access_token_fb='',
+                            team_domain=team_domain,
+                            team_id=team_id,
+                            channel_id=channel_id,
+                            user_name_czm='',
+                            state_params=state_params)
+            user_new.save(force_insert=True)
+            return render(request, 'please/fbauth.html',
+                          {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
+                           'team_domain': team_domain})
+            # except:
+            #     return json_response({"error": "Oops!! Someone crashed on this page while flying"})
 
 
 @csrf_exempt
