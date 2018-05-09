@@ -127,7 +127,7 @@ def postquestion(request):
                                 channel_id=channel_id,
                                 user_name_czm='',
                                 state_params=token)
-                user_new.save(force_insert=True)
+                user_new.save()
 
 
             r = requests.post('https://hooks.slack.com/services/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', json={
