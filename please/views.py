@@ -113,7 +113,7 @@ def postquestion(request):
             # state_params = token
             # user_id = request.POST['user_id']
 
-            user = User.objects.filter(team_domain=team_domain,user_name=user_name, state_params="created")
+            user = User.objects.filter(team_domain=team_domain,user_name_slack=user_name, state_params="created")
             if len(user) == 1:
                 # User exists.. no need to save
                 # api call to post question to collaborizm
