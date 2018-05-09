@@ -42,3 +42,21 @@ class AuthenticatedSpaces(models.Model):
 
     def __str__(self):
       return str(self.team_name)
+    
+class User(models.Model):
+    user_name_slack = models.CharField(max_length=100,primary_key=True)
+    slack_token = models.CharField(max_length=100)
+    access_token_fb = models.TextField(default='')
+    team_domain = models.CharField(max_length=50)
+    team_id = models.CharField(max_length=100)
+    channel_id = models.CharField(max_length=100)
+    user_name_czm = models.CharField(max_length=100)
+    state_params = models.TextField(default='')
+    
+    def __str__(self):
+      return str(self.user_name_slack)
+    
+    
+    
+    
+  

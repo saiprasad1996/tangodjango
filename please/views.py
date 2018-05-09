@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render,redirect
 import json
-from .models import SlackAskUs,Log,AuthenticatedSpaces
+from .models import SlackAskUs,Log,AuthenticatedSpaces,User
 import datetime
 import requests
 from tangodjango import settings
@@ -236,15 +236,67 @@ def collab_broadcast(request):
 def fbauth(request):
   try:
     if request.method=="GET":
-      log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
-      log.save(force_insert=True)
-      return render(request,'please/fbauth.html')
+#       log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
+#       log.save(force_insert=True)
+      return json_response({"error":"Oops!! Someone crashed on this page while wandering"})
     elif request.method=="POST":
       log = Log(logtext=str(request.POST),timestamp=datetime.datetime.now())
       log.save(force_insert=True)
-      return render(request,'please/fbauth.html')
+      token = request.POST['token']
+      team_id = request.POST['team_id']
+      team_domain = request.POST["team_domain"]
+      channel_id = request.POST['channel_id']
+      user_id = request.POST['user_id']
+      user_name = request.POST['user_name']
+      state_params = token
+      user_id = request.POST['user_id']
+      
+      user = User.objects.filter(user_id=user_id,user_name=user_name,state_params="created")
+      if len(user) == 1:
+        #User exists.. no need to save
+        #api call to post question to collaborizm
+      else:
+        user_new = User(user_name_slack = user_name,
+                        slack_token = token,
+                        access_token_fb = '',
+                        team_domain = team_domain,
+                        team_id = team_id,
+                        channel_id = channel_id,
+                        user_name_czm = '',
+                        state_params = state_params)
+        user_new(force_insert=True)
+        return render(request,'please/fbauth.html',{'state_params':state_params,"user_id":user_id,'user_name':user_name,'token':token,'team_domain':team_domain})
   except :
     return json_response({"error":"Oops!! Someone crashed on this page while flying"})
     
+@csrf_exempt
+def user_register_fb(request):
+  try:
+    if request.method=="POST":
+      token = request.POST['token']
+      team_domain = request.POST["team_domain"]
+      user_id = request.POST['user_id']
+      user_name = request.POST['user_name']
+      state_params = request.POST["state_params"]
+      access_token_fb = request.POST["access_token_fb"]
+
+      user = User.objects.filter(token=token,user_id=user_id,user_name=user_name,state_params=state_params)
+      if len(user)==0:
+        return json_response({"status":"failed","message":"Didn't perform FB authentication"})
+      else:
+        user=user[0]
+        user.access_token_fb = access_token_fb
+        user.save(force_update=True)
+        return json_response({"status":"success","message":"authentication successful"})
+    else:
+      return json_response({"status":"failed","message":"Oops!! Someone crashed on this page while flying"})
+  except :
+    return json_response({"status":"failed","message":"User doesnot exists"})
+  
+  
+  
+  
+  
+  
   
   
