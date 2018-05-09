@@ -101,6 +101,35 @@ def postquestion(request):
                                   response_url=response_url,
                                   trigger_id=trigger_id)
             new_data.save()
+#############################################
+            log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
+            log.save(force_insert=True)
+            token = request.POST['token']
+            team_id = request.POST['team_id']
+            team_domain = request.POST["team_domain"]
+            channel_id = request.POST['channel_id']
+            user_name = request.POST['user_name']
+            state_params = token
+            user_id = request.POST['user_id']
+
+            user = User.objects.filter(user_id=user_id, user_name=user_name, state_params="created")
+            if len(user) == 1:
+                # User exists.. no need to save
+                # api call to post question to collaborizm
+                pass
+            else:
+                user_new = User(user_name_slack=user_name,
+                                slack_token=token,
+                                access_token_fb='',
+                                team_domain=team_domain,
+                                team_id=team_id,
+                                channel_id=channel_id,
+                                user_name_czm='',
+                                state_params=state_params)
+                user_new.save(force_insert=True)
+
+
+###########################################
             r = requests.post('https://hooks.slack.com/services/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', json={
                 "text": "Question from {} Workspace".format(
                     "Techguides" if team_domain == "techguidesczm" else team_domain),
@@ -126,7 +155,7 @@ def postquestion(request):
                                 "text": "Sign In",
                                 "type": "button",
                                 "value": "signin",
-                                "url": "https://tangodjango.herokuapp.com/please/collab/fbauth"
+                                "url": "https://www.facebook.com/v3.0/dialog/oauth?client_id=368928313620535&redirect_uri=https%3A%2F%2Ftangodjango.herokuapp.com%2Fplease%2Fcollab%2Ffbauth&state=%7Bstate-param%7D"
                             },
                             {
                                 "name": "sign_in",
@@ -249,7 +278,7 @@ def fbauth(request):
     if request.method == "GET":
         #       log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
         #       log.save(force_insert=True)
-        return json_response({"error": "Oops!! Someone crashed on this page while wandering"})
+        return json_response({"error": "Oops!! Someone crashed on this page while wandering","request":str(request.GET)})
     elif request.method == "POST":
         log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
         log.save(force_insert=True)
