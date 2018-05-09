@@ -104,13 +104,13 @@ def postquestion(request):
 #############################################
             log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
             log.save(force_insert=True)
-            token = request.POST['token']
-            team_id = request.POST['team_id']
-            team_domain = request.POST["team_domain"]
-            channel_id = request.POST['channel_id']
-            user_name = request.POST['user_name']
-            state_params = token
-            user_id = request.POST['user_id']
+            # token = request.POST['token']
+            # team_id = request.POST['team_id']
+            # team_domain = request.POST["team_domain"]
+            # channel_id = request.POST['channel_id']
+            # user_name = request.POST['user_name']
+            # state_params = token
+            # user_id = request.POST['user_id']
 
             user = User.objects.filter(user_id=user_id, user_name=user_name, state_params="created")
             if len(user) == 1:
@@ -125,11 +125,10 @@ def postquestion(request):
                                 team_id=team_id,
                                 channel_id=channel_id,
                                 user_name_czm='',
-                                state_params=state_params)
+                                state_params=token)
                 user_new.save(force_insert=True)
 
 
-###########################################
             r = requests.post('https://hooks.slack.com/services/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', json={
                 "text": "Question from {} Workspace".format(
                     "Techguides" if team_domain == "techguidesczm" else team_domain),
