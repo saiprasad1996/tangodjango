@@ -102,4 +102,10 @@ ENV/
 
 .vscode/
 
-db.sqlite3
+
+.idea/misc.xml
+.idea/modules.xml
+.idea/tangodjango.iml
+.idea/workspace.xml
+.idea/vcs.xml
+/db.sqlite3

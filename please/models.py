@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 # Create your models here.
 class SlackAskUs(models.Model):
     
@@ -22,7 +22,7 @@ class SlackAskUs(models.Model):
 
 class Log(models.Model):
     logtext = models.TextField(default="")
-    timestamp = models.TimeField()
+    timestamp = models.TimeField(default=datetime.datetime.now())
 
     def __str__(self):
         return str(self.timestamp)
