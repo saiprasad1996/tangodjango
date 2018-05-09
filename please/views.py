@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 import json
@@ -181,7 +182,7 @@ def postquestion(request):
                 ]
             }
             return json_response(response)
-        except Exception:
+        except MultiValueDictKeyError:
             return json_response({
                 "response_type": "ephemeral",
                 "text": "Oops! I think there is some issue with this command. Please check back later"
