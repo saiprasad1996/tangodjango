@@ -338,7 +338,7 @@ def user_register_fb(request):
             state_params = request.POST["state_params"]
             access_token_fb = request.POST["access_token_fb"]
 
-            user = User.objects.filter(token=token, user_id=user_id, user_name=user_name, state_params=state_params)
+            user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params=state_params)
             if len(user) == 0:
                 return json_response({"status": "failed", "message": "Didn't perform FB authentication"})
             else:
