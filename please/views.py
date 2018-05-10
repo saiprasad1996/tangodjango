@@ -7,6 +7,7 @@ from .models import SlackAskUs, Log, AuthenticatedSpaces, User
 import datetime
 import requests
 from tangodjango import settings
+from urllib.parse import urlencode
 
 
 # Create your views here.
@@ -26,13 +27,13 @@ def json_response(obj):
 @csrf_exempt
 def pleaseInfo(request):
     if (request.method == 'GET'):
-        return HttpResponse("This is a get request");
+        return HttpResponse("This is a get request")
     elif (request.method == 'POST'):
         try:
             meta_info = (request.META)
 
             body = str(request.body.decode('utf-8'))
-            content = "";
+            content = ""
             # content = "{}".format(meta_info)
 
             response = HttpResponse("", content_type="text/plain; charset=utf-8")
@@ -102,7 +103,7 @@ def postquestion(request):
                                   response_url=response_url,
                                   trigger_id=trigger_id)
             new_data.save()
-#############################################
+            #############################################
             log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
             log.save(force_insert=True)
             # token = request.POST['token']
@@ -113,7 +114,7 @@ def postquestion(request):
             # state_params = token
             # user_id = request.POST['user_id']
 
-            user = User.objects.filter(team_domain=team_domain,user_name_slack=user_name, state_params="created")
+            user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params="created")
             if len(user) == 1:
                 # User exists.. no need to save
                 # api call to post question to collaborizm
@@ -128,7 +129,9 @@ def postquestion(request):
                                 user_name_czm='',
                                 state_params=token)
                 user_new.save()
-
+            qstr_fb = urlencode({'state_params': token, "user_id": user_id, 'user_name': user_name, 'token': token,
+                                 'team_domain': team_domain})
+            url_fb = "https://tangodjango.herokuapp.com/please/collab/fbauth?" + qstr_fb
 
             r = requests.post('https://hooks.slack.com/services/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', json={
                 "text": "Question from {} Workspace".format(
@@ -155,7 +158,7 @@ def postquestion(request):
                                 "text": "Sign In",
                                 "type": "button",
                                 "value": "signin",
-                                "url": "https://www.facebook.com/v3.0/dialog/oauth?client_id=368928313620535&redirect_uri=https%3A%2F%2Ftangodjango.herokuapp.com%2Fplease%2Fcollab%2Ffbauth&state=%7Bstate-param%7D"
+                                "url": url_fb
                             },
                             {
                                 "name": "sign_in",
@@ -274,43 +277,54 @@ def collab_broadcast(request):
 
 @csrf_exempt
 def fbauth(request):
-    # try:
-    if request.method == "GET":
-        #       log = Log(logtext=str(request.GET),timestamp=datetime.datetime.now())
-        #       log.save(force_insert=True)
-        return json_response({"error": "Oops!! Someone crashed on this page while wandering","request":str(request.GET)})
-    elif request.method == "POST":
-        log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
-        log.save(force_insert=True)
-        token = request.POST['token']
-        team_id = request.POST['team_id']
-        team_domain = request.POST["team_domain"]
-        channel_id = request.POST['channel_id']
-        user_id = request.POST['user_id']
-        user_name = request.POST['user_name']
-        state_params = token
-        user_id = request.POST['user_id']
-
-        user = User.objects.filter(user_id=user_id, user_name=user_name, state_params="created")
-        if len(user) == 1:
-            # User exists.. no need to save
-            # api call to post question to collaborizm
-            pass
-        else:
-            user_new = User(user_name_slack=user_name,
-                            slack_token=token,
-                            access_token_fb='',
-                            team_domain=team_domain,
-                            team_id=team_id,
-                            channel_id=channel_id,
-                            user_name_czm='',
-                            state_params=state_params)
-            user_new.save(force_insert=True)
+    try:
+        if request.method == "GET":
+            log = Log(logtext=str(request.GET), timestamp=datetime.datetime.now())
+            log.save(force_insert=True)
+            token = request.GET['token']
+            # team_id = request.GET['team_id']
+            team_domain = request.GET["team_domain"]
+            # channel_id = request.GET['channel_id']
+            # user_id = request.GET['user_id']
+            user_name = request.GET['user_name']
+            state_params = token
+            user_id = request.GET['user_id']
             return render(request, 'please/fbauth.html',
                           {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
                            'team_domain': team_domain})
-            # except:
-            #     return json_response({"error": "Oops!! Someone crashed on this page while flying"})
+
+        elif request.method == "POST":
+            log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
+            log.save(force_insert=True)
+            token = request.POST['token']
+            team_id = request.POST['team_id']
+            team_domain = request.POST["team_domain"]
+            channel_id = request.POST['channel_id']
+            user_id = request.POST['user_id']
+            user_name = request.POST['user_name']
+            state_params = token
+            user_id = request.POST['user_id']
+
+            user = user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params="created")
+            if len(user) == 1:
+                # User exists.. no need to save
+                # api call to post question to collaborizm
+                pass
+            else:
+                user_new = User(user_name_slack=user_name,
+                                slack_token=token,
+                                access_token_fb='',
+                                team_domain=team_domain,
+                                team_id=team_id,
+                                channel_id=channel_id,
+                                user_name_czm='',
+                                state_params=token)
+                user_new.save(force_insert=True)
+                return render(request, 'please/fbauth.html',
+                              {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
+                               'team_domain': team_domain})
+    except:
+        return json_response({"error": "Oops!! You crash-landed on this page"})
 
 
 @csrf_exempt
