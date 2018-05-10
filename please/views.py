@@ -116,9 +116,17 @@ def postquestion(request):
 
             user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params="created")
             if len(user) == 1:
-                # User exists.. no need to save
-                # api call to post question to collaborizm
-                pass
+                response = {
+                    "text": "Ok! Thats a great question.. One of your community member will get back to you soon! ",
+                    "attachments": [
+                        {
+                            "text": "Your question was posted to Collaborizm Community",
+                        }
+                    ]
+
+                }
+                return json_response(response)
+
             else:
                 user_new = User(user_name_slack=user_name,
                                 slack_token=token,
@@ -148,7 +156,6 @@ def postquestion(request):
                 "attachments": [
                     {
                         "text": "To access the collaborizm community we need to authenticate your facebook as a security check…",
-                        "fallback": "You are unable to choose a game",
                         "callback_id": "login_option",
                         "color": "#3AA3E3",
                         "attachment_type": "default",
@@ -305,7 +312,8 @@ def fbauth(request):
             state_params = token
             user_id = request.POST['user_id']
 
-            user = user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params="created")
+            user = user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name,
+                                              state_params="created")
             if len(user) == 1:
                 # User exists.. no need to save
                 # api call to post question to collaborizm
@@ -344,6 +352,7 @@ def user_register_fb(request):
             else:
                 user = user[0]
                 user.access_token_fb = access_token_fb
+                user.state_params = "created"
                 user.save(force_update=True)
                 return json_response({"status": "success", "message": "authentication successful"})
         else:
