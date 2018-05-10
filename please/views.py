@@ -113,7 +113,7 @@ def postquestion(request):
             # user_name = request.POST['user_name']
             # state_params = token
             # user_id = request.POST['user_id']
-
+            response = {}
             user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params="created")
             if len(user) == 1:
                 response = {
@@ -125,7 +125,6 @@ def postquestion(request):
                     ]
 
                 }
-                return json_response(response)
 
             else:
                 user_new = User(user_name_slack=user_name,
@@ -138,7 +137,7 @@ def postquestion(request):
                                 state_params=token)
                 user_new.save()
             qstr_fb = urlencode({'state_params': token, "user_id": user_id, 'user_name': user_name, 'token': token,
-                                 'team_domain': team_domain})
+                                 'team_domain': team_domain, "response_url": response_url})
             url_fb = "https://tangodjango.herokuapp.com/please/collab/fbauth?" + qstr_fb
 
             r = requests.post('https://hooks.slack.com/services/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', json={
@@ -151,7 +150,7 @@ def postquestion(request):
                                     "text": "https://www.collaborizm.com/thread/Hyq6_lp2M"
                                 }]
             }, headers={"Content-Type": "application/json"})
-            response = {
+            response_ = {
                 "text": "Ok! Thats a great question.. One of your community member will get back to you soon! ",
                 "attachments": [
                     {
@@ -190,8 +189,8 @@ def postquestion(request):
                         ]
                     }
                 ]
-            }
-            return json_response(response)
+            } if len(user) == 1 else response
+            return json_response(response_)
         except MultiValueDictKeyError:
             return json_response({
                 "response_type": "ephemeral",
@@ -294,11 +293,12 @@ def fbauth(request):
             # channel_id = request.GET['channel_id']
             # user_id = request.GET['user_id']
             user_name = request.GET['user_name']
+            response_url = request.GET["response_url"]
             state_params = token
             user_id = request.GET['user_id']
             return render(request, 'please/fbauth.html',
                           {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
-                           'team_domain': team_domain})
+                           'team_domain': team_domain, "response_url": response_url})
 
         elif request.method == "POST":
             log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
@@ -345,6 +345,7 @@ def user_register_fb(request):
             user_name = request.POST['user_name']
             state_params = request.POST["state_params"]
             access_token_fb = request.POST["access_token_fb"]
+            response_url = request.POST['response_url']
 
             user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params=state_params)
             if len(user) == 0:
@@ -354,6 +355,8 @@ def user_register_fb(request):
                 user.access_token_fb = access_token_fb
                 user.state_params = "created"
                 user.save(force_update=True)
+                requests.post(response_url, json={"text": "You are successfully authenticated with facebook"},
+                              headers={"Content-Type": "application/json"})
                 return json_response({"status": "success", "message": "authentication successful"})
         else:
             return json_response({"status": "failed", "message": "Oops!! Someone crashed on this page while flying"})
