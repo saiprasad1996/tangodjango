@@ -115,6 +115,7 @@ def postquestion(request):
             # user_id = request.POST['user_id']
             response = {}
             user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params="created")
+            print(user)
             if len(user) == 1:
                 response = {
                     "text": "Ok! Thats a great question.. One of your community member will get back to you soon! ",
@@ -189,7 +190,8 @@ def postquestion(request):
                         ]
                     }
                 ]
-            } if len(user) == 1 else response
+            } if len(user) == 0 else response
+
             return json_response(response_)
         except MultiValueDictKeyError:
             return json_response({
