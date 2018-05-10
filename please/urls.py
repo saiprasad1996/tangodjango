@@ -10,6 +10,6 @@ urlpatterns = [
     url(r'^collab/auth/redirect$', views.collab_redirect),
     url(r'^collab/broadcast$', views.collab_broadcast),
     url(r'^collab/fbauth$', views.fbauth),
-    url(r'^collab/fbregister', views.user_register_fb, name="fb_register")
+    url(r'^collab/fbregister$', views.user_register_fb, name="fb_register")
 
 ]
