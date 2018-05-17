@@ -357,6 +357,25 @@ def user_register_fb(request):
                 user.access_token_fb = access_token_fb
                 user.state_params = "created"
                 user.save(force_update=True)
+                query_loggedin = """
+                {
+                      	auth{
+                          loggedInUser{
+                            facebook_id
+                            first_name
+                            last_name
+                            city
+                            stars
+                            about_you
+                          }
+                        }
+
+                }
+                """
+                r = requests.post("https://api.oomloop.com/graphql", json={"query": query_loggedin})
+                collab_json = json.loads(r.text)
+                print(collab_json)
+                #collab_json["data"]["auth"][""]
                 requests.post(response_url, json={"text": "You are successfully authenticated with facebook"},
                               headers={"Content-Type": "application/json"})
                 return json_response({"status": "success", "message": "authentication successful"})
