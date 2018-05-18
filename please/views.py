@@ -358,19 +358,15 @@ def user_register_fb(request):
                 user.state_params = "created"
                 user.save(force_update=True)
                 query_loggedin = """
-                {
-                      	auth{
-                          loggedInUser{
-                            facebook_id
-                            first_name
-                            last_name
-                            city
-                            stars
-                            about_you
-                          }
-                        }
-
-                }
+                mutation{
+                     authentication{
+                       facebook(code:"{"""+access_token_fb +"""}"){
+                         first_name
+                         id
+                         facebook_id
+                       }
+                     }
+                    }
                 """
                 r = requests.post("https://api.oomloop.com/graphql", json={"query": query_loggedin})
                 collab_json = json.loads(r.text)
