@@ -289,18 +289,61 @@ def fbauth(request):
         if request.method == "GET":
             log = Log(logtext=str(request.GET), timestamp=datetime.datetime.now())
             log.save(force_insert=True)
-            token = request.GET['token']
-            # team_id = request.GET['team_id']
-            team_domain = request.GET["team_domain"]
-            # channel_id = request.GET['channel_id']
-            # user_id = request.GET['user_id']
-            user_name = request.GET['user_name']
-            response_url = request.GET["response_url"]
-            state_params = token
-            user_id = request.GET['user_id']
-            return render(request, 'please/fbauth.html',
-                          {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
-                           'team_domain': team_domain, "response_url": response_url})
+            if "code" in request.GET and "state" in request.GET:
+                code = request.GET["code"]
+                state = json.loads(request.GET['state'])
+                token = state["token"]
+                team_domain = state["team_domain"]
+                user_name = state["user_name"]
+                response_url = state["response_url"]
+                user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name,
+                                           state_params=token)
+                if len(user) == 0:
+                    return json_response({"status": "failed", "message": "Oops! No user exists"})
+                else:
+                    user = user[0]
+                    user.access_token_fb = code
+
+                    query_loggedin = """
+                                    mutation{
+                                         authentication{
+                                           slackbot(fb_code:"{""" + code + """}"){
+                                             first_name
+                                             id
+                                             facebook_id
+                                           }
+                                         }
+                                        }
+                                    """
+                    r = requests.post("https://api.oomloop.com/graphql", json={"query": query_loggedin})
+                    collab_json = json.loads(r.text)
+                    czm_user = None
+                    try:
+                        czm_user = collab_json["data"]["authentication"]["slackbot"]["id"]
+                    except:
+                        return json_response({"status": "failed", "message": "Error fetching information from graphql"})
+                    user.state_params = "created"
+                    user.user_name_czm = czm_user
+                    user.save(force_update=True)
+                    # collab_json["data"]["auth"][""]
+                    requests.post(response_url,
+                                  json={"text": "You are successfully authenticated with facebook and Collaborizm"},
+                                  headers={"Content-Type": "application/json"})
+                    return json_response(
+                        {"status": "success", "message": "Your Collaborizm account was successfully authenticated"})
+            else:
+                token = request.GET['token']
+                # team_id = request.GET['team_id']
+                team_domain = request.GET["team_domain"]
+                # channel_id = request.GET['channel_id']
+                # user_id = request.GET['user_id']
+                user_name = request.GET['user_name']
+                response_url = request.GET["response_url"]
+                state_params = token
+                user_id = request.GET['user_id']
+                return render(request, 'please/fb_auth.html',
+                              {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
+                               'team_domain': team_domain, "response_url": response_url})
 
         elif request.method == "POST":
             log = Log(logtext=str(request.POST), timestamp=datetime.datetime.now())
@@ -360,7 +403,7 @@ def user_register_fb(request):
                 query_loggedin = """
                 mutation{
                      authentication{
-                       facebook(code:"{"""+access_token_fb +"""}"){
+                       facebook(code:"{""" + access_token_fb + """}"){
                          first_name
                          id
                          facebook_id
@@ -371,7 +414,7 @@ def user_register_fb(request):
                 r = requests.post("https://api.oomloop.com/graphql", json={"query": query_loggedin})
                 collab_json = json.loads(r.text)
                 print(collab_json)
-                #collab_json["data"]["auth"][""]
+                # collab_json["data"]["auth"][""]
                 requests.post(response_url, json={"text": "You are successfully authenticated with facebook"},
                               headers={"Content-Type": "application/json"})
                 return json_response({"status": "success", "message": "authentication successful"})
