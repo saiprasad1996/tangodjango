@@ -308,7 +308,7 @@ def fbauth(request):
                     query_loggedin = """
                                     mutation{
                                          authentication{
-                                           slackbot(fb_code:"{""" + code + """}"){
+                                           slackbot(fb_code:\"""" + code + """\"){
                                              first_name
                                              id
                                              facebook_id
@@ -318,6 +318,7 @@ def fbauth(request):
                                     """
                     r = requests.post("https://api.oomloop.com/graphql", json={"query": query_loggedin})
                     collab_json = json.loads(r.text)
+                    print(collab_json)
                     czm_user = None
                     try:
                         czm_user = collab_json["data"]["authentication"]["slackbot"]["id"]
