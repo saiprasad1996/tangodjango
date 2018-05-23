@@ -376,7 +376,7 @@ def fbauth(request):
                 return render(request, 'please/fbauth.html',
                               {'state_params': state_params, "user_id": user_id, 'user_name': user_name, 'token': token,
                                'team_domain': team_domain})
-    except:
+    except MultiValueDictKeyError:
         return json_response({"error": "Oops!! You crash-landed on this page"})
 
 

@@ -109,3 +109,4 @@ ENV/
 .idea/workspace.xml
 .idea/vcs.xml
 /db.sqlite3
+.idea/
