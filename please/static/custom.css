@@ -32,7 +32,7 @@
 /* Values
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .values {
-  background-image: url('../images/values-bg.jpg');
+
   background-size: cover;
   color: #fff;
   padding-bottom: 5rem;
@@ -58,7 +58,7 @@
 /* Categories
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .categories {
-  background-image: url('../images/values-bg.jpg');
+
   background-size: cover;
   color: #fff;
 }

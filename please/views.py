@@ -357,7 +357,7 @@ def fbauth(request):
             state_params = token
             user_id = request.POST['user_id']
 
-            user = user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name,
+            user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name,
                                               state_params="created")
             if len(user) == 1:
                 # User exists.. no need to save
