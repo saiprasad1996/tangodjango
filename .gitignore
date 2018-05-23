@@ -110,3 +110,4 @@ ENV/
 .idea/vcs.xml
 /db.sqlite3
 .idea/
+/staticfiles/
