@@ -292,6 +292,7 @@ def fbauth(request):
             if "code" in request.GET and "state" in request.GET:
                 code = request.GET["code"]
                 state = json.loads(request.GET['state'])
+                #print(state)
                 token = state["token"]
                 team_domain = state["team_domain"]
                 user_name = state["user_name"]
