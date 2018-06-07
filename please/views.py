@@ -326,7 +326,10 @@ def fbauth(request):
                         return json_response({"status": "failed", "message": "Error fetching information from graphql"})
                     user.state_params = "created"
                     user.user_name_czm = czm_user
-                    user.save(force_update=True)
+                    try:
+                        user.save(force_update=True)
+                    except:
+                        return json_response({"status": "failed", "message": "Error fetching information from graphql. User information null."})
                     # collab_json["data"]["auth"][""]
                     requests.post(response_url,
                                   json={"text": "You are successfully authenticated with facebook and Collaborizm"},
