@@ -34,7 +34,7 @@
 <body>
 <div class="container">
     <div class="form-container">
-
+            <form>
             <div class="row">
                 <div class="heading">
                     <p style="font-size:18pt">Hi {{ user_name }}! Please press the below button to Link Slack and Collaborizm through Facebook authentication. Following Information would be pulled from your Collaborizm Account</p>
@@ -46,7 +46,7 @@
             </div>
             <br/>
         <a class="button button-primary" href='https://www.facebook.com/v3.0/dialog/oauth?client_id=301863613354615&redirect_uri=https://tangodjango.herokuapp.com/please/collab/fbauth&state={"token":"{{token}}","team_domain":"{{team_domain}}","response_url":"{{response_url}}","user_name":"{{user_name}}"}'>Authenticate</a>
-
+            </form>
     </div>
 </div>
 </body>
