@@ -309,8 +309,10 @@ def fbauth(request):
                                     mutation{
                                          authentication{
                                            slackbot(fb_code:\"""" + code + """\"){
-                                             user_id
                                              token
+                                             user{
+                                                id
+                                             }
                                            }
                                          }
                                         }
@@ -320,7 +322,7 @@ def fbauth(request):
                     print(collab_json)
                     czm_user = None
                     try:
-                        czm_user = collab_json["data"]["authentication"]["slackbot"]["user_id"]
+                        czm_user = collab_json["data"]["authentication"]["slackbot"]["user"]["id"]
                         user.access_token_fb = collab_json["data"]["authentication"]["slackbot"]["token"]
                     except:
                         return json_response({"status": "failed", "message": "Error fetching information from graphql"})
