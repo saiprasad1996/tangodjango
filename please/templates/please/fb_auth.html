@@ -30,31 +30,39 @@
             align-items:center;
         }
 
+
 </style>
 <body>
-<div class="container">
-    <div class="form-container">
-            <form>
-            <div class="row">
-                <div class="heading">
-                    <p style="font-size:18pt">Hi {{ user_name }}! Please press the below button to Link Slack and Collaborizm through Facebook authentication. Following Information would be pulled from your Collaborizm Account</p>
-                </div>
-                <hr/>
-                <div>
-                    <label >Collaborizm Username</label>
+<div style="display:flex;">
+    <center>
+        <div class="form" style="width:40%; align-items:center; text-align:center;">
+            <form style="padding:10px;">
+
+                    <div>
+                        <p style="font-size:13pt">Hi {{ user_name }}! Please press the below button to Link Slack and
+                            Collaborizm through Facebook authentication. </p>
+                    <hr>
                     </div>
-            </div>
-            <br/>
-        <a class="button button-primary" href='https://www.facebook.com/v3.0/dialog/oauth?client_id=301863613354615&redirect_uri=https://tangodjango.herokuapp.com/please/collab/fbauth&state={"token":"{{token}}","team_domain":"{{team_domain}}","response_url":"{{response_url}}","user_name":"{{user_name}}"}'>Authenticate</a>
+
+                    <div>
+                        Following Information would be pulled from your
+                            Collaborizm Account
+                        <label>Collaborizm User id</label>
+                    </div>
+
+                <br/>
+                <a class="button button-primary" style="background:#3b5998; border-color:#3b5998;"
+                   href='https://www.facebook.com/v3.0/dialog/oauth?client_id=301863613354615&redirect_uri=https://tangodjango.herokuapp.com/please/collab/fbauth&state={"token":"{{token}}","team_domain":"{{team_domain}}","response_url":"{{response_url}}","user_name":"{{user_name}}"}'>Authenticate using facebook</a>
             </form>
-    </div>
+        </div>
+    </center>
 </div>
 </body>
 <footer class="section">
     <div class="container">
         <p class="section-description">Copyright &copy; 2018-Present, Collaborizm.<br/></p>
         <p class="section-description">Check us out @ <a target="_blank"
-                                                                   href="https://www.collaborizm.com/">Collaborizm</a>
+                                                         href="https://www.collaborizm.com/">Collaborizm</a>
         </p>
         <a>
 
