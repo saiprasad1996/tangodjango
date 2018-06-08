@@ -114,14 +114,22 @@ def postquestion(request):
             # state_params = token
             # user_id = request.POST['user_id']
             response = {}
+            question_url=None
             user = User.objects.filter(team_domain=team_domain, user_name_slack=user_name, state_params="created")
             print(user)
             if len(user) == 1:
+                question_url = postQustiontoCollaborizm(title="Question posted from Slack", text=text,
+                                                        jwt=user[0].access_token_fb)
+
                 response = {
-                    "text": "Ok! Thats a great question.. One of your community member will get back to you soon! ",
+                    "text": "Thank you for asking a question to Collaborizm Community! ",
                     "attachments": [
                         {
                             "text": "Your question was posted to Collaborizm Community",
+                        },
+                        {
+                            "title": "See your question on Collaborizm here : ",
+                            "text": question_url
                         }
                     ]
 
@@ -148,11 +156,11 @@ def postquestion(request):
                                  "author_name": "Asked by {}".format(user_name)
                                  }, {
                                     "title": "See Question on Collaborizm here : ",
-                                    "text": "https://www.collaborizm.com/thread/Hyq6_lp2M"
+                                    "text": question_url
                                 }]
             }, headers={"Content-Type": "application/json"})
             response_ = {
-                "text": "Ok! Thats a great question.. One of your community member will get back to you soon! ",
+                "text": "Thank you for asking a question to Collaborizm Community! One of your community member will get back to you soon! ",
                 "attachments": [
                     {
                         "text": "To access the collaborizm community we need to authenticate your facebook as a security check…",
@@ -198,6 +206,28 @@ def postquestion(request):
                 "response_type": "ephemeral",
                 "text": "Oops! I think there is some issue with this command. Please check back later"
             })
+
+
+def postQustiontoCollaborizm(title, text, jwt, category="question"):
+    query_discusion_post = """
+                   mutation{
+                 discussions{
+                   discussionPost(input:{title:\"""" + title + """\" text:\"""" + text + """\" category:""" + category + """}){
+                     id
+                     owner{
+                      first_name
+                    }
+                   }
+                 }
+                }
+            """
+    headers = {"Content-Type": "application/json", "Authorization": "Bearer {}".format(jwt)}
+    print(headers)
+    r = requests.post("https://api.oomloop.com/graphql", headers=headers, json={"query": query_discusion_post})
+    collab_json = json.loads(r.text)
+    print(collab_json)
+    discussion_url = "https://pb.oomloop.com/thread/" + collab_json["data"]["discussions"]["discussionPost"]["id"]
+    return discussion_url
 
 
 def showQuestions(request):
