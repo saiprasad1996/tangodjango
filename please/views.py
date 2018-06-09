@@ -263,7 +263,7 @@ def collab_redirect(request):
         log = Log(logtext=str(r.text), timestamp=datetime.datetime.now())
         log.save(force_insert=True)
 
-        return HttpResponse("Success!")
+        return HttpResponse("Success Installing Collaborizm Slack app to your workspace!! Cheers",status=302)
     except Exception:
 
         return HttpResponse("Error encountered")
@@ -364,7 +364,7 @@ def fbauth(request):
                         return json_response({"status": "failed", "message": "Error fetching information from graphql. User information null."})
                     # collab_json["data"]["auth"][""]
                     requests.post(response_url,
-                                  json={"text": "You are successfully authenticated with facebook and Collaborizm"},
+                                  json={"text": "You are successfully authenticated with facebook and Collaborizm. Please re-ask your question."},
                                   headers={"Content-Type": "application/json"})
                     return json_response(
                         {"status": "success", "message": "Your Collaborizm account was successfully authenticated"})
