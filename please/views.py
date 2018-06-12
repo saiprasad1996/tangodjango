@@ -122,18 +122,7 @@ def postquestion(request):
                                                         jwt=user[0].access_token_fb,workspace=team_domain)
 
                 response = {
-                    "text": "Your question was successfully submitted. You can see your question post here: {}. "
-                            "It has also been distributed to our private roundtable.",
-                    "attachments": [
-                        {
-                            "text": "Your question was posted to Collaborizm Community",
-                        },
-                        {
-                            "title": "See your question on Collaborizm here : ",
-                            "text": question_url
-                        }
-                    ]
-
+                    "text": "Your question was successfully submitted. You can see your question post here: {}. It has also been distributed to our private roundtable ".format(question_url),
                 }
 
             else:
