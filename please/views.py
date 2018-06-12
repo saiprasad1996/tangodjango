@@ -119,10 +119,11 @@ def postquestion(request):
             print(user)
             if len(user) == 1:
                 question_url = postQustiontoCollaborizm(title="Question posted from Slack", text=text,
-                                                        jwt=user[0].access_token_fb)
+                                                        jwt=user[0].access_token_fb,workspace=team_domain)
 
                 response = {
-                    "text": "Thank you for asking a question to Collaborizm Community! ",
+                    "text": "Your question was successfully submitted. You can see your question post here: {}. "
+                            "It has also been distributed to our private roundtable.",
                     "attachments": [
                         {
                             "text": "Your question was posted to Collaborizm Community",
@@ -163,7 +164,7 @@ def postquestion(request):
                 "text": "Thank you for asking a question to Collaborizm Community! One of your community member will get back to you soon! ",
                 "attachments": [
                     {
-                        "text": "To access the collaborizm community we need to authenticate your facebook as a security check…",
+                        "text": "Your question was successfully submitted to the roundtable.",
                         "callback_id": "login_option",
                         "color": "#3AA3E3",
                         "attachment_type": "default",
@@ -208,11 +209,11 @@ def postquestion(request):
             })
 
 
-def postQustiontoCollaborizm(title, text, jwt, category="question"):
+def postQustiontoCollaborizm(title, text, jwt,workspace, category="question"):
     query_discusion_post = """
                    mutation{
                  discussions{
-                   discussionPost(input:{title:\"""" + title + """\" text:\"""" + text + """\" category:""" + category + """}){
+                   discussionPost(input:{title:\"""" + "Question posted by {} workspace (slackbot)".format(workspace)  + """\" text:\"""" + text + """\" category:""" + category + """}){
                      id
                      owner{
                       first_name
